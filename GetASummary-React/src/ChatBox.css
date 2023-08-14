@@ -44,13 +44,28 @@
   }
   
   .chat-log {
-    position: relative; /* Change from absolute to relative */
+    max-height: 600px;
+    overflow-y: overlay;
+    position: relative;
     text-align: left;
   }
-  
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #888; 
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #51705e; 
+}
+
   .chat-input-holder {
-    position: relative; /* Change from absolute to relative */
+    position: relative;
     padding: 24px;
+    
   }
   
   .App-logo {

@@ -56,7 +56,6 @@ const FileScreen = () => {
     // Add the user's message to the chat log
     const newChatLog = [...chatLog, { user: 'user', message: chatInput }];
     setChatLog(newChatLog);
-  
     // Send the user's question and the PDF text to the server
     fetch('http://localhost:5000/get-answer', {
       method: 'POST',
@@ -70,16 +69,16 @@ const FileScreen = () => {
     })
     .then(response => response.json())
     .then(data => {
-      // Add the server's response to the chat log
-      setChatLog([...newChatLog, { user: 'gpt', message: data.answer }]);
+      setChatLog([...newChatLog, { user: 'gpt', message: data.newAnswer }]);
     })
     .catch(error => {
+      console.log('Error:', error);
       console.error('Failed to get answer from GPT-3.5 Turbo:', error);
     });
-  
     // Clear the chat input
     setChatInput('');
   };
+  
   
 
   return (

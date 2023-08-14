@@ -12,7 +12,7 @@ app.use(cors());
 
 // Define the path to the build directory
 const buildPath = path.join(__dirname, '..', 'GetASummary-React', 'get-a-summary', 'build');
-
+console.log(buildPath)
 // Multer setup for file uploads
 const upload = multer({ dest: 'uploads/' });
 
@@ -38,10 +38,26 @@ const axios = require('axios');
 
 app.post('/get-answer', express.json(), async (req, res) => {
     const { pdfText, userQuestion } = req.body;
+    prompt_content = "You are an expert reading a document, generating report from user asked questions and answering them based on document. \n\n"
+    prompt_content += "Report Description:\nThe report should contain the following: \n"
+    prompt_content += "The output should have concise paragraphs that answer the questions asked by the user. \n"
+    prompt_content += "The output should be in the form of a report that is easy to read and understand. \n"
+    prompt_content += 'The output should be in the form paragraphs with headings. \n'
+    prompt_content += "There should be multiple line gaps between paragraphs \n"
+    prompt_content += "The output should have headings i.e. summary, keypoints and overview on separate paragraphs. \n"
+    prompt_content += "There must be a heading for each paragraph. \n"
+    prompt_content += "End of line should be represented by <br> \n"
+    prompt_content += "The output should be in the form of a report that is easy to read and understand. \n"
+    prompt_content += "The output should be in the form of headings and in the key points. \n"
+    prompt_content += "The output should have a title, summary, keypoints and overview. \n"
+    prompt_content += "Every paragraph must have heading \n"
+
+    prompt_message = "\n pdf content: " + pdfText + "\n\n" + prompt_content + "\n\n"
+
     const messages = [
         {
             "role": "system",
-            "content": pdfText
+            "content": prompt_message
         },
         {
             "role": "user",
@@ -59,9 +75,12 @@ app.post('/get-answer', express.json(), async (req, res) => {
                 'Content-Type': 'application/json'
             }
         });
+        let answer = gptResponse.data.choices[0].message.content.trim();
 
-        const answer = gptResponse.data.choices[0].message.content.trim();
-        res.json({ answer });
+        let list = answer.split("\n");
+        let newAnswer = list.join("<br/>");
+        console.log(newAnswer);
+        res.json({ newAnswer });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Failed to get answer.' });
@@ -85,4 +104,9 @@ app.get('*', (req, res) => {
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
+});
+
+app.get('', express.json(), async (req, res) => {
+    return "hello"
+
 });

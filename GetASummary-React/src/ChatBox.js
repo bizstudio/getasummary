@@ -22,18 +22,19 @@ const ChatBox = ({chatLog, setChatInput, handleSubmit, chatInput}) =>
 
 // Individual Chat Message
 const ChatMessage = ({ message }) => {
+  const createMarkup = (htmlString) => {
+    return { __html: htmlString };
+  };
+
   return (
     <div className={`chat-message ${message.user === "gpt" && "chatgpt"}`}>
-    <div className="chat-message-center">
-      <div className={`avatar ${message.user === "gpt" && "chatgpt"}`}>
-        {message.user === "gpt" ? <OpenAISVGLogo /> : <div>You</div>}
-      </div>
-      <div className="message">
-        {message.message}
+      <div className="chat-message-center">
+        <div className={`avatar ${message.user === "gpt" && "chatgpt"}`}>
+          {message.user === "gpt" ? <OpenAISVGLogo /> : <div>You</div>}
+        </div>
+        <div className="message" dangerouslySetInnerHTML={createMarkup(message.message)} />
       </div>
     </div>
-  </div>
-  )
-}
-
+  );
+}; 
 export default ChatBox
