@@ -39,19 +39,13 @@ const axios = require('axios');
 
 app.post('/get-answer', express.json(), async (req, res) => {
     const { pdfText, userQuestion } = req.body;
-    prompt_content = "You are an expert reading a document, generating output from user asked questions and answering them based on document. \n\n"
+    prompt_content = "You are an expert reading a document, generating output from user asked questions and answering them based on document in 4 headings. \n\n"
     prompt_content += "Report Description:\nThe report s hould contain the following: \n"
-    prompt_content += "The output should have concise paragraphs that answer the questions asked by the user. \n"
-    prompt_content += "The output should be in the form of a report that is easy to read and understand. \n"
-    prompt_content += 'The output should be in the form paragraphs with headings. \n'
+    prompt_content += 'The answer should be in the form paragraphs with headings. \n'
     prompt_content += "There should be multiple line gaps between paragraphs \n"
-    prompt_content += "The output should have headings i.e. summary, keypoints and overview on separate paragraphs. \n"
-    prompt_content += "There must be a heading for each paragraph. \n"
-    prompt_content += "The output should be in the form of a report that is easy to read and understand. \n"
-    prompt_content += "The output should be in the form of headings and in the key points. \n"
-    prompt_content += "The output should have a title, summary, keypoints and overview. \n"
-    prompt_content += "No paragraph should be included without heading \n"
-    prompt_content += "There should • as bullet point in start of every keypoint \n"
+    prompt_content += "The output should have 4 headings title, summary, keypoints and overview on separate paragraphs. \n"
+    prompt_content += "The output should be in the form of headings having a single paragraph\n"
+    prompt_content += "Output must have title heading,summery heading, keypoints heading and overview heading against every question\n"
 
     prompt_message = "\n pdf content: " + pdfText + "\n\n" + prompt_content + "\n\n"
 
@@ -78,12 +72,12 @@ app.post('/get-answer', express.json(), async (req, res) => {
         });
         let answer = gptResponse.data.choices[0].message.content.trim();
 
-
+        console.log(answer)
         let list = answer.split("\n");
         let newAnswer = list.join("<br/>");
 
 
-        let regexPattern = /([<br/>]([0-9]*[.][ ])|-[ ])/g;
+        let regexPattern = /([<br/>]+([0-9]+[.][ ])|[<br/>]-[ ])/g;
         let replacementPattern = '<br/>● ';
 
         newAnswer = newAnswer.replace(regexPattern, replacementPattern);
